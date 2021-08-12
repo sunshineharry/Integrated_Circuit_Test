@@ -1,0 +1,82 @@
+MEM_SOURCE_15;
+
+PINDEF
+
+ADDR1                  =I,BIN,(2)
+ADDR0                  =I,BIN,(46)
+D0                     =I,BIN,(6)
+D1                     =I,BIN,(5)
+D2                     =I,BIN,(4)
+D3                     =I,BIN,(3)
+DATA0                  =I,BIN,(42)
+DATA1                  =I,BIN,(43)
+DATA2                  =I,BIN,(44)
+DATA3                  =I,BIN,(45)
+ST1                    =I,BIN,(1)
+ST2                    =I,BIN,(47)
+Y1                     =O,BIN,(7)
+Y2                     =O,BIN,(41)
+
+
+// 管脚号与通道号的对应关系（此处可省略）
+PIN_TO_CHANNEL
+1..7=1..7
+9..15=41..47
+
+MAIN_F
+
+START_INDEX(0) // FUNCTION TEST
+ INC        (XX XXXX XXXX XX XX)//根据真值表，两个通道同步测试
+ INC        (XX XXXX XXXX 11 LL)
+ INC        (00 0XXX 0XXX 00 LL)
+ INC        (00 1XXX 1XXX 00 HH)
+ INC        (01 X0XX X0XX 00 LL)
+ INC        (01 X1XX X1XX 00 HH)
+ INC        (10 XX0X XX0X 00 LL)
+ INC        (10 XX1X XX1X 00 HH)
+ INC        (11 XXX0 XXX0 00 LL)
+ INC        (11 XXX1 XXX1 00 HH)
+ HALT       (XX XXXX XXXX 11 LL)
+
+//以下为直流参数测试
+START_INDEX(1)//VOH TEST
+ INC        (00 1XXX 1XXX 00 XX)//选中两个通道D0，并设置为1，输出应为HH
+ INC        (00 1XXX 1XXX 00 XX)
+ INC        (00 1XXX 1XXX 00 XX)
+ HALT       (00 1XXX 1XXX 00 XX)
+
+START_INDEX(2)//VOL TEST
+ INC        (00 0XXX 0XXX 00 XX)//选中两个通道D0，并设置为0，输出应为LL
+ INC        (00 0XXX 0XXX 00 XX)
+ INC        (00 0XXX 0XXX 00 XX)
+ HALT       (00 0XXX 0XXX 00 XX)
+
+START_INDEX(3)//Icc TEST
+  // 此时应用动态测量指令LDF和JMP
+  LDF       (00 1XXX 1XXX 00 HH)
+X INC       (00 1XXX 1XXX 00 HH)
+  INC       (00 1XXX 1XXX 00 HH)  //芯片保持工作状态
+  INC       (00 1XXX 1XXX 00 HH)
+  INC       (00 1XXX 1XXX 00 HH)
+  JMP,X     (00 1XXX 1XXX 00 HH)
+  HALT      (00 1XXX 1XXX 00 HH)
+
+START_INDEX(4)//Ii TEST
+ INC        (00 1XXX 1XXX 00 HH)//选中两个通道D0，并设置为1
+ INC        (00 1XXX 1XXX 00 HH)
+ INC        (00 1XXX 1XXX 00 HH)
+ HALT       (00 1XXX 1XXX 00 HH)
+
+START_INDEX(5)//IIH TEST
+ INC        (11 1111 1111 00 HH)//选中两个通道D3，并设置为1
+ INC        (11 1111 1111 00 HH)
+ INC        (11 1111 1111 00 HH)
+ HALT       (11 1111 1111 00 HH)
+
+START_INDEX(6)//IIL TEST
+ INC        (00 0000 0000 00 LL)//选中两个通道D0，并设置为0
+ INC        (00 0000 0000 00 LL)
+ INC        (00 0000 0000 00 LL) 
+ HALT       (00 0000 0000 00 LL)
+
+ END.
