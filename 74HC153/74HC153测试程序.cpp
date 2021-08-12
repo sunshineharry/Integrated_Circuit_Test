@@ -21,7 +21,7 @@ void PASCAL 74HC153()
     SET_DPS(1, 4.75, V, 50, MA);    //设置DPS为4.75V
     SET_INPUT_LEVEL(2, 0.8);   //设置输入高低电平
     SET_OUTPUT_LEVEL(2.4, 0.4);  //设置输出比较高低电平
-    SET_PERIOD(800);             //设置测试周期为800ns
+    SET_PERIOD(800);             //设置测试周期为800ns 【这里的参数是怎么确定的】
     SET_TIMING(50, 600, 700);    //设置输入管脚时序时间和输出管脚采样时间
     FORMAT(NRZ0, "1-6,42-47"); //设置输入管脚格式
 
@@ -62,7 +62,7 @@ void PASCAL 74HC153()
 
    //VIK-TEST
     SET_DPS(1, 4.75, V, 50, MA); //VCC(MIN)                    
-    PMU_CONDITIONS(FIMV,-12,MA,-2,V); //这里钳位电压怎么选？？？
+    PMU_CONDITIONS(FIMV,-12,MA,-2,V); //这里钳位电压怎么选？？？ MAX=-1.5V，指的是绝对值还是数值？
     if (!PMU_MEASURE("1-6,42-47",5,"VIK_",V,-1.5,No_LoLimit)) //通道号输入；延迟5ms；上限1ua。下限0ua
         BIN(5);
 
@@ -100,7 +100,7 @@ void PASCAL 74HC153()
     if (!PMU_MEASURE("7,41",5,"IOS_",MA,-18,-57)) //通道号输入；延迟5ms；上限1ua。下限0ua
         BIN(9);
 
-    //ICCH测试，Vcc为5.25V时
+    //ICCH测试，Vcc为5.25V时？？？
     SET_DPS(1, 5.25, V, 50, MA); //VCC(MAX)
     RUN_PATTERN(6, 1, 0, 0);     
     if (!DPS_MEASURE(1,R200MA,5,"ICC_",MA,36,60)) //通道号输入；延迟5ms；上限1ua。下限0ua
